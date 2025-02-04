@@ -58,15 +58,6 @@ export default function EditScreenInfo({ path }: { path: string }) {
     }
   }, [totalMatches]);
 
-  // useEffect(() => {
-  //   console.log(
-  //     totalMatches,
-  //     "  ",
-  //     cardState.filter((item) => item.isMatched).length / 2,
-  //     "  "
-  //   );
-  // }, [cardState, totalMatches]);
-
   const toggleCard = (index: number, emoji: string) => {
     if (index === firstCard?.index) return;
     if (cardState[index].isMatched) return;

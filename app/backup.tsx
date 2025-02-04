@@ -7,11 +7,9 @@ import {
   rrect,
 } from "@shopify/react-native-skia";
 import { useRouter } from "expo-router";
-import React, { useEffect, useLayoutEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 import { Dimensions, Platform, Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
-  css,
-  CSSAnimationKeyframes,
   FadeInUp,
   useDerivedValue,
   useSharedValue,
@@ -21,7 +19,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { AnimatedSvgCard } from "../components/AnimatedSvgCard";
 import { _lightPurple } from "../constants/Colors";
-import CardGrid from "@/components/AtlasCards";
 
 const isAndroid = Platform.OS =='android'
 
@@ -32,21 +29,10 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export default function HomeScreen() {
   const logoAnimation = useSharedValue(0);
   const router = useRouter();
-  
-  // useEffect(() => {
-    //   logoAnimation.value = withDelay(2000, withTiming(1, { duration: 2500 }));
-    // }, []);
-  
-  const [isToggled, toggle] = useReducer((s) => !s, false);
-    
-  useLayoutEffect(() => {
-    const timeoutId = setTimeout(() => {
-      toggle()
-    }, 2000);
 
-    // Cleanup function to clear the timeout if the component unmounts
-    return () => clearTimeout(timeoutId);
-  },[])
+  useEffect(() => {
+    logoAnimation.value = withDelay(2000, withTiming(1, { duration: 2500 }));
+  }, []);
 
   // Define the outer and inner rectangles as rrect objects
   const outer = useDerivedValue(
@@ -75,15 +61,14 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* <Canvas style={{ flex: 1, backgroundColor: "#000" }}>
+      <Canvas style={{ flex: 1, backgroundColor: "#000" }}>
         <Group>
           {Array.from({ length: 40 }).map((item, index) => (
             <AnimatedSvgCard index={index} key={`item-${index}`} />
           ))}
         </Group>
         <DiffRect outer={outer} inner={inner}></DiffRect>
-      </Canvas> */}
-      <CardGrid isToggled={isToggled}/>
+      </Canvas>
       <Animated.Text
         style={{
           position: "absolute",
@@ -91,15 +76,13 @@ export default function HomeScreen() {
           fontSize: 50,
           top: isAndroid ? "60%" : "55%",
           left: isAndroid ? "10%" : "20%",
-          zIndex: 100
         }}
         entering={ZoomIn.delay(3900).springify().damping(80).stiffness(200)}
       >
         Match Cards
       </Animated.Text>
       <AnimatedPressable
-        // onPress={() => router.push("/game")}
-        onPress={toggle}
+        onPress={() => router.push("/game")}
         entering={ZoomIn.delay(3900).springify().damping(80).stiffness(200)}
         style={[
           {
@@ -112,21 +95,12 @@ export default function HomeScreen() {
             backgroundColor: _lightPurple,
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 100,
           },
           styles.boxShadow,
         ]}
       >
         <Text style={{ fontSize: 30, fontWeight: "600" }}>Start</Text>
       </AnimatedPressable>
-      <Animated.View style={[cssStyles.revealEffect, {
-        width: isToggled? 200: width,
-        height: isToggled ? 200: height + width * 0.5,
-        transitionProperty: ["width", "height"],
-        transitionDuration: ['1s', "1s"],
-        transitionDelay: '1s',
-        transitionTimingFunction: "easeInOut"
-      }]} />
     </View>
   );
 }
@@ -140,26 +114,3 @@ const styles = StyleSheet.create({
     elevation: 16,
   },
 });
-
-  const cssStyles = css.create({
-    revealEffect: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: [
-          {
-            translateX: "-50%"
-          },
-          {
-            translateY: "-62%"
-          },
-        ],
-        width: 200,
-        height: 200,
-        backgroundColor: "transparent",
-        boxShadow: "0 0 0 400 rgba(0, 0, 0, 1)",
-        pointerEvents: "none",
-        borderRadius: 15
-      }
-  });
-

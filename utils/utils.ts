@@ -48,7 +48,7 @@ export function clearAnimatedInterval(handle: AnimatedIntervalID): void {
 }
 
 export const generateCardPairs = (emojiList: string[]) => {
-  console.log(emojiList)
+  // console.log(emojiList)
   // Step 1: Duplicate the emojis to make pairs
   const cardPairs = [...emojiList, ...emojiList, "🙊"];
 
